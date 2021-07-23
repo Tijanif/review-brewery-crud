@@ -175,4 +175,42 @@ breweriesRouter.post('/', (req, res) => {
   res.json({ brewery: newBrewery });
 });
 
+// Delete a brewery/:id
+breweriesRouter.delete('/:id', (req, res) => {
+  let { id } = req.params;
+  id = Number(id);
+
+  const brewery = breweriesDB.find((brewery) => brewery.id === id);
+
+  if (brewery) {
+    breweriesDB = breweriesDB.filter((brewery) => brewery.id !== id);
+    res.json({ deletedBrewery: brewery });
+  } else {
+    res.json({ deletedBrewery: `Brewery do not exist` });
+  }
+});
+
+// Patch
+// change the keys with the updated wersion, keeping the one's that don't change
+breweriesRouter.patch('/:id', (req, res) => {
+  let { id } = req.params;
+  id = Number(id);
+  const brewery = breweriesDB.find((brewery) => brewery.id === id);
+
+  const updatedBrewery = req.body;
+
+  let responseBrewery = null;
+
+  breweriesDB = breweriesDB.map((brewery) => {
+    if (brewery.id === id) {
+      responseBrewery = { ...brewery, ...updatedBrewery };
+      return responseBrewery;
+    } else {
+      return brewery;
+    }
+  });
+
+  res.json({ updatedBrewery: responseBrewery });
+});
+
 module.exports = breweriesRouter;
