@@ -3,7 +3,7 @@ const express = require('express');
 // our brewery routes
 const breweriesRouter = express.Router();
 
-const breweriesDB = [
+let breweriesDB = [
   {
     id: 9094,
     obdb_id: 'bnaf-llc-austin',
@@ -163,6 +163,16 @@ breweriesRouter.get('/', (req, res) => {
     response = breweriesDB;
   }
   res.json({ breweries: response });
+});
+
+// post to database
+breweriesRouter.post('/', (req, res) => {
+  // we are receiving the new brewery through body
+  const newBrewery = req.body;
+
+  breweriesDB = [...breweriesDB, newBrewery];
+
+  res.json({ brewery: newBrewery });
 });
 
 module.exports = breweriesRouter;
