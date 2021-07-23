@@ -146,8 +146,23 @@ const breweriesDB = [
   },
 ];
 
+// A GET endpoint /breweries?brewery_type=TYPE
 breweriesRouter.get('/', (req, res) => {
-  res.json({ breweries: breweriesDB });
+  const { brewery_type } = req.query;
+  let response = null;
+
+  if (brewery_type) {
+    const filteredBreweries = breweriesDB.filter(
+      (brewery) => brewery.brewery_type === brewery_type
+    );
+
+    response = filteredBreweries.length
+      ? filteredBreweries
+      : `Can't find breweries of that type!`;
+  } else {
+    response = breweriesDB;
+  }
+  res.json({ breweries: response });
 });
 
 module.exports = breweriesRouter;
