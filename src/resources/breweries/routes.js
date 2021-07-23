@@ -195,22 +195,27 @@ breweriesRouter.delete('/:id', (req, res) => {
 breweriesRouter.patch('/:id', (req, res) => {
   let { id } = req.params;
   id = Number(id);
+
   const brewery = breweriesDB.find((brewery) => brewery.id === id);
 
-  const updatedBrewery = req.body;
-
   let responseBrewery = null;
+  if (brewery) {
+    const updatedBrewery = req.body;
 
-  breweriesDB = breweriesDB.map((brewery) => {
-    if (brewery.id === id) {
-      responseBrewery = { ...brewery, ...updatedBrewery };
-      return responseBrewery;
-    } else {
-      return brewery;
-    }
-  });
+    breweriesDB = breweriesDB.map((brewery) => {
+      if (brewery.id === id) {
+        responseBrewery = { ...brewery, ...updatedBrewery };
+        return responseBrewery;
+      } else {
+        return brewery;
+      }
+    });
 
-  res.json({ updatedBrewery: responseBrewery });
+    res.json({ updatedBrewery: responseBrewery });
+  } else {
+    responseBrewery = 'Could not find a brewery to update';
+  }
+  res.json({ updatedBrewey: responseBrewery });
 });
 
 module.exports = breweriesRouter;
